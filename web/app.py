@@ -1,8 +1,6 @@
-from flask import Flask
-from flask import request
-from flask import render_template
-from flask import redirect
-from flask import url_for
+import os
+
+from flask import Flask, request, render_template, redirect
 from pymongo import MongoClient
 from bson import ObjectId
 
@@ -10,10 +8,12 @@ client = MongoClient("mongodb://mongo:27017/")
 mydb = client["ipa2025"]
 mycol = mydb["router"]
 
+mongo_uri  = os.environ.get("MONGO_URI")
+db_name    = os.environ.get("DB_NAME")
+
 sample = Flask(__name__)
 
 data = []
-
 
 @sample.route("/")
 def main():
@@ -35,8 +35,8 @@ def delete_router():
         idx = request.form.get("idx")
         if idx:
             mycol.delete_one({"_id": ObjectId(idx)})
-    except Exception:
-        pass
+    except Exception as e:
+            print("Delete failed:", e)
     return redirect(url_for("main"))
 
 if __name__ == "__main__":
