@@ -21,6 +21,8 @@ services:
       - mongo-data:/data/db
     networks:
       - app-net
+    env_file:
+      - .env
 
 volumes:
   mongo-data:
